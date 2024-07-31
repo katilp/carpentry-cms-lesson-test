@@ -149,6 +149,7 @@ Now let's get back to the output we got from running `writecountdatacard.py`.  T
 ## Challenge: Add a statistical uncertainty
 
 Look at the output of `writecountdatacard.py`:
+
   * Which process has the largest event weight?
   * Can you incorporate the statistical uncertainty for that particular process to the datacard?
   * Run Combine and discuss the effect on the limits.
