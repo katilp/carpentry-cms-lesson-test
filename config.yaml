@@ -68,6 +68,7 @@ contact: 'klp' # FIXME
 episodes: 
 - introduction.md
 - 02-new-episode.md
+- 05-challenge.md
 
 # Information for Learners
 learners: 

@@ -265,6 +265,18 @@
 </div>
 <!--/div.accordion-flush-->
 
+<div class="accordion accordion-flush" id="accordionFlush4">
+  <div class="accordion-item">
+    <div class="accordion-header" id="flush-heading4">
+        <a href="05-challenge.html">3. Limit calculation challenge</a>
+    </div>
+<!--/div.accordion-header-->
+
+  </div>
+<!--/div.accordion-item-->
+</div>
+<!--/div.accordion-flush-->
+
                 </div>
               </div>
             </div>
@@ -570,6 +582,417 @@ documentation is the best bet.</li>
 <code>hello-world</code> example.</li>
 <li>The concepts of image and container, plus the knowledge of certain
 Dockers commands, is all that is needed for the hands-on sessions.</li>
+</ul>
+</div>
+</div>
+</div>
+<!--
+Place links that you need to refer to multiple times across pages here. Delete
+any links that you are not going to use.
+ -->
+</section></section><section id="aio-05-challenge"><p>Content from <a href="05-challenge.html">Limit calculation challenge</a></p>
+<hr>
+<p>Last updated on 2024-07-31 |
+
+        <a href="https://github.com/katilp/carpentry-cms-lesson-test/edit/main/episodes/05-challenge.md" class="external-link">Edit this page <i aria-hidden="true" data-feather="edit"></i></a></p>
+<p>Estimated time: <i aria-hidden="true" data-feather="clock"></i> 40 minutes</p>
+<div class="text-end">
+          <button role="button" aria-pressed="false" tabindex="0" id="expand-code" class="pull-right" data-expand="Expand All Solutions " data-collapse="Collapse All Solutions "> Expand All Solutions <i aria-hidden="true" data-feather="plus"></i></button>
+        </div>
+<div class="overview card">
+<h2 class="card-header">Overview</h2>
+<div class="row g-0">
+<div class="col-md-4">
+<div class="card-body">
+<div class="inner">
+<h3 class="card-title">Questions</h3>
+<ul>
+<li>How do I write a Combine datacard for a counting analysis and for a
+shape analysis?</li>
+<li>How do I incorporate the effects of systematic uncertainties?</li>
+<li>How do I calculate expected and observed limits?</li>
+<li>How do I interpret the resulting limits?</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<div class="inner bordered">
+<h3 class="card-title">Objectives</h3>
+<ul>
+<li>Construct a Combine datacard for a counting analysis, learn to
+modify systematics.</li>
+<li>Construct a Combine datacard for a shape analysis, learn to modify
+systematics.</li>
+<li>Calculate limits using Combine with different methods for counting
+and shape datacards and compare.</li>
+<li>Understand what the limits mean.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>The goal of this exercise is to use the <code>Combine</code> tool to
+calculate limits from the results of the <span class="math inline">\(Z'\)</span> search studied in the previous
+exercises. We will use the <code>Zprime_hists_FULL.root</code> file
+generated during the <a href="https://cms-opendata-workshop.github.io/workshop2024-lesson-uncertainties/instructor/05-challenge.html" class="external-link">Uncertainties
+challenge</a>. We will build various datacards from it, add systematics,
+calculate limits on the signal strength and understand the output.</p>
+<div id="prereq1" class="callout prereq">
+<div class="callout-square">
+<i class="callout-icon" data-feather="check"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Prerequisite<a class="anchor" aria-label="anchor" href="#prereq1"></a>
+</h3>
+<div class="callout-content">
+<p>For the activities in this session you will need:</p>
+<ul>
+<li>Your Combine docker container (installation instructions provided in
+the setup section of this tutorial)</li>
+</ul>
+</div>
+</div>
+</div>
+<section><h2 class="section-heading" id="statistical-analysis-as-a-counting-experiment">Statistical analysis as a counting experiment<a class="anchor" aria-label="anchor" href="#statistical-analysis-as-a-counting-experiment"></a>
+<a class="anchor" aria-label="anchor" href="#statistical-analysis-as-a-counting-experiment"></a>
+</h2>
+<hr class="half-width">
+<p>At the end of the <a href="event%20selection%20exercise">https://cms-opendata-workshop.github.io/workshop2024-lesson-event-selection/</a>,
+you applied a set of selection criteria to events that would enhance
+<span class="math inline">\(Z'\)</span> signal from SM backgrounds.
+Then you obtained the ttbar mass distributions for data, <span class="math inline">\(Z'\)</span> signal and a set of SM background
+processes after this selection. In the <a href="https://cms-opendata-workshop.github.io/workshop2024-lesson-uncertainties/instructor/05-challenge.html" class="external-link">Uncertainties
+challenge</a> exercise, you learned to obtain variations on these
+distributions arising from certain systematic effects. In this first
+exercise, we will treat the events surviving the selection as a single
+quantity to perform a statistical analysis on a counting experiment. In
+other words, we will collapse the <code>mtt</code> distributions into a
+single “number of events” by integrating over all bins. Then we will use
+these numbers obtained for all histograms, including those with
+systematic variations, to build a counting experiment datacard.</p>
+<p>First, start your Combine Docker container and make a working
+directory:</p>
+<div class="codewrapper sourceCode" id="cb1">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="ex">docker</span> start <span class="at">-i</span> combine</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">mkdir</span> /code/Zprime</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="bu">cd</span> /code/Zprime</span></code></pre>
+</div>
+<p>Download the <code>Zprime_hists_FULL.root</code> and the python
+script to make the datacard:</p>
+<div class="codewrapper sourceCode" id="cb2">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">wget</span> https://github.com/cms-opendata-workshop/workshop2024-lesson-statistical-inference/raw/main/instructors//Zprime_hists_FULL.root</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">wget</span> https://github.com/cms-opendata-workshop/workshop2024-lesson-statistical-inference/raw/main/instructors//writecountdatacard.py</span></code></pre>
+</div>
+<p>You can look into the <code>writecountdatacard.py</code> script to
+see how the datacard is written from the ROOT file. Run the script:</p>
+<div class="codewrapper sourceCode" id="cb3">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">python</span> writecountdatacard.py</span></code></pre>
+</div>
+<p>(ignore the output for the moment). Now look into
+<code>datacard_counts.txt</code> and try to answer the following
+questions:</p>
+<div id="questions" class="callout discussion">
+<div class="callout-square">
+<i class="callout-icon" data-feather="message-circle"></i>
+</div>
+<div id="questions" class="callout-inner">
+<h3 class="callout-title">Questions<a class="anchor" aria-label="anchor" href="#questions"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>Which is the background contributing most?</li>
+<li>What can you say when you compare data, total backgrounds, and
+signal counts?</li>
+<li>Can you understand the effect of the various systematic
+uncertainties?</li>
+<li>Which systematic is expected to have the overall bigger impact?</li>
+<li>Which process is affected most by systematics?</li>
+</ul>
+</div>
+</div>
+</div>
+<p>Now run Combine over this datacard to obtain the limits on our
+parameter of interest, signal strength, with the simple
+<code>AsymptoticLimits</code> option:</p>
+<div class="codewrapper sourceCode" id="cb4">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">combine</span> <span class="at">-M</span> AsymptoticLimits datacard_count.txt</span></code></pre>
+</div>
+<p>You will see some error messages concerning the computation of the
+observed limit, arising from numerical stability issues. In order to
+avoid this, let’s rerun by limiting the signal strength to be maximum
+2:</p>
+<div class="codewrapper sourceCode" id="cb5">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">combine</span> <span class="at">-M</span> AsymptoticLimits datacard_count.txt <span class="at">--rMax</span><span class="op">=</span>2</span></code></pre>
+</div>
+<p>Look at the output, and try to answer the following:</p>
+<div id="questions-1" class="callout discussion">
+<div class="callout-square">
+<i class="callout-icon" data-feather="message-circle"></i>
+</div>
+<div id="questions-1" class="callout-inner">
+<h3 class="callout-title">Questions<a class="anchor" aria-label="anchor" href="#questions-1"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>What is the observed limit? What is the expected limit? What are the
+uncertainties on the expected limit?</li>
+<li>Did our analysis exclude this particular <span class="math inline">\(Z'\)</span> signal?</li>
+<li>What can you say when you compare the values of the observed limit
+with the expected limit?</li>
+<li>What does it mean that the observed limit is much lower compared to
+the expected limit? Does this make sense? <strong>Hint:</strong> Go back
+to the datacard and look at the data, background and signal counts.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="taming-the-observed-dont-try-this-at-home" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="taming-the-observed-dont-try-this-at-home" class="callout-inner">
+<h3 class="callout-title">Taming the observed (DON’T TRY THIS AT HOME!)<a class="anchor" aria-label="anchor" href="#taming-the-observed-dont-try-this-at-home"></a>
+</h3>
+<div class="callout-content">
+<p>A hypothetical question: What would bring the observed limit within
+the expected uncertainties? Do the necessary modifications in the
+datacard and see if the limit behaves as you predicted.</p>
+<p>You can rerun <code>writecountdatacard.py</code> to reset the
+datacard.</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution1" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
+  <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
+</button>
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
+<div class="accordion-body">
+<p>Observed limit is below the expected boundaries because we have much
+more MC compared to data. This means there is less room for signal to be
+accommodated in data, i.e. excluding signal becomes easier. If we had
+more data, or less backgrounds, there would be more room for signal, and
+the observed limit would be more consistent with the expected. So
+hypothetically one could * Increase the data counts, or * Decrease
+counts in one or more background processes.</p>
+<p>The point of this question was to increase the understanding. We
+never do this in real life!!!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="add-uncertainties-to-the-datacard">Add uncertainties to the datacard<a class="anchor" aria-label="anchor" href="#add-uncertainties-to-the-datacard"></a>
+</h3>
+<p>Now let’s add more uncertainties, both systematic and statistical.
+Let’s start with adding a classic - the systematic uncertainty due to
+luminosity measurement:</p>
+<div id="challenge-add-a-lognormal-luminosity-systematic" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="challenge-add-a-lognormal-luminosity-systematic" class="callout-inner">
+<h3 class="callout-title">Challenge: Add a lognormal luminosity systematic<a class="anchor" aria-label="anchor" href="#challenge-add-a-lognormal-luminosity-systematic"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>Please add a lognormal systematic uncertainty on luminosity (called
+<code>lumi</code>) that affects all signal and background processes,
+inducing a symmetric 2.5% up and down variation.</li>
+<li>Run Combine with the new datacard and discuss the effect on the
+limits.</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="accordionSolution2" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
+  <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
+</button>
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
+<div class="accordion-body">
+<pre><code>lumi            lnN        1.025          1.025          1.025          1.025          1.025</code></pre>
+</div>
+</div>
+</div>
+</div>
+<p>Now let’s add a statistical uncertainty. Our signal and background
+yields come from Monte Carlo, and the number of events could be limited,
+resulting on non-negligible statistical uncertainties. We apply
+<em>event weights</em> to these MC events so that the resulting rate
+matches a certain value, e.g. cross section times the luminosity.
+Statistical uncertainties are particularly relevant if both the yields
+are small and the event weights are large (i.e. much less actual MC
+events are available compared to the expected yield). Here is a quote
+from the Combine documentation on how to take these into account:</p>
+<p><em>“gmN stands for Gamma, and is the recommended choice for the
+statistical uncertainty in a background determined from the number of
+events in a control region (or in an MC sample with limited sample
+size). If the control region or simulated sample contains N events, and
+the extrapolation factor from the control region to the signal region is
+α, one shoud put N just after the gmN keyword, and then the value of α
+in the relevant (bin,process) column. The yield specified in the rate
+line for this (bin,process) combination should equal Nα.”</em></p>
+<p>Now let’s get back to the output we got from running
+<code>writecountdatacard.py</code>. There you see the number of total
+unweighted events, total weighted events and event weight for each
+process.</p>
+<div id="challenge-add-a-statistical-uncertainty" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="challenge-add-a-statistical-uncertainty" class="callout-inner">
+<h3 class="callout-title">Challenge: Add a statistical uncertainty<a class="anchor" aria-label="anchor" href="#challenge-add-a-statistical-uncertainty"></a>
+</h3>
+<div class="callout-content">
+<p>Look at the output of <code>writecountdatacard.py</code>: * Which
+process has the largest event weight? * Can you incorporate the
+statistical uncertainty for that particular process to the datacard? *
+Run Combine and discuss the effect on the limits. * OPTIONAL: You can
+add the statistical uncertainties for the other processes as well and
+observe their effect on the limits.</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution3" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
+  <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
+</button>
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
+<div class="accordion-body">
+<pre><code>stat_signal     gmN 48238  0.0307         -              -              -              -
+stat_tt_semilep gmN 137080 -              0.0383         -              -              -
+stat_tt_had     gmN 817    -              -              0.0636         -              -
+stat_tt_lep     gmN 16134  -              -              -              0.0325         -
+stat_wjets	gmN 19     -              -              -              -              15.1623</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="improve-the-limit">Improve the limit<a class="anchor" aria-label="anchor" href="#improve-the-limit"></a>
+</h3>
+<div id="improving-the-limit" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="improving-the-limit" class="callout-inner">
+<h3 class="callout-title">Improving the limit<a class="anchor" aria-label="anchor" href="#improving-the-limit"></a>
+</h3>
+<div class="callout-content">
+<p>What would you do to improve the limit here?</p>
+<p><strong>HINT</strong> Look at the original plot displaying the data,
+background and signal distributions.</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution4" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
+  <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
+</button>
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
+<div class="accordion-body">
+<ul>
+<li>In a count experiment setup, we can consider taking into account a
+part of the <code>mtt</code> distribution where the signal is
+dominant.</li>
+<li>We can do a shape analysis, which takes into account each bin
+separately.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<p>Let’s improve the limit in the couting experiment setup by computing
+total counts considering only the last 25 bins out of the 50 total:</p>
+<div class="codewrapper sourceCode" id="cb8">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">python</span> writecountdatacard.py <span class="at">--startbin</span> 25 <span class="at">--stat</span> <span class="at">--lm</span></span></code></pre>
+</div>
+<p>We also added flags to automatically add the satistical and lumi
+uncertainties :). How did the yields change? Did the limit improve? You
+can try with different starting bin options to see how the limits
+change.</p>
+</div>
+</section><section><h2 class="section-heading" id="shape-analysis">Shape analysis<a class="anchor" aria-label="anchor" href="#shape-analysis"></a>
+<a class="anchor" aria-label="anchor" href="#shape-analysis"></a>
+</h2>
+<hr class="half-width">
+<p>Now we move to a shape analysis, where each bin in the
+<code>mtt</code> distribution is taken into account. Datacards for shape
+analyses are built with similar principles as those for counting
+analyses, but their syntax is slightly different. Here is the shape
+datacard for the <span class="math inline">\(Z'\)</span>
+analysis:</p>
+<div class="codewrapper sourceCode" id="cb9">
+<h3 class="code-label">BASH<i aria-hidden="true" data-feather="chevron-left"></i><i aria-hidden="true" data-feather="chevron-right"></i>
+</h3>
+<pre class="sourceCode bash" tabindex="0"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">wget</span> https://github.com/cms-opendata-workshop/workshop2024-lesson-statistical-inference/raw/main/instructors/datacard_shape.txt</span></code></pre>
+</div>
+<p>Examine it and note the differences in syntax. To run on Combine,
+this datacard needs to be accompanied by the
+<code>Zprime_hists_FULL.root</code> file, as the shapes are directly
+retrieved from the histograms within.</p>
+<p>Run Combine with this datacard. How do the limits compare with
+respect to the counts case?</p>
+<div id="limits-on-cross-section" class="callout challenge">
+<div class="callout-square">
+<i class="callout-icon" data-feather="zap"></i>
+</div>
+<div id="limits-on-cross-section" class="callout-inner">
+<h3 class="callout-title">Limits on cross section<a class="anchor" aria-label="anchor" href="#limits-on-cross-section"></a>
+</h3>
+<div class="callout-content">
+<p>So far we have worked with limits on the signal strength. How can we
+compute the limits on cross section? Can you calculate the upper limit
+on <span class="math inline">\(Z'\)</span> cross section for this
+model?</p>
+</div>
+</div>
+</div>
+<div id="accordionSolution5" class="accordion challenge-accordion accordion-flush">
+<div class="accordion-item">
+<button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
+  <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
+</button>
+<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
+<div class="accordion-body">
+<p>We can multiply the signal strength limit with the theoretically
+predicted cross section for the signal process.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="keypoints1" class="callout keypoints">
+<div class="callout-square">
+<i class="callout-icon" data-feather="key"></i>
+</div>
+<div class="callout-inner">
+<h3 class="callout-title">Key Points<a class="anchor" aria-label="anchor" href="#keypoints1"></a>
+</h3>
+<div class="callout-content">
+<ul>
+<li>xxx</li>
+<li>yyy</li>
 </ul>
 </div>
 </div>
