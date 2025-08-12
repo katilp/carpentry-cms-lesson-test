@@ -355,8 +355,8 @@ calculate limits on the signal strength and understand the output.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="check"></i>
 </div>
+<span class="callout-header">Prerequisite</span>
 <div class="callout-inner">
-<h3 class="callout-title">Prerequisite</h3>
 <div class="callout-content">
 <p>For the activities in this session you will need:</p>
 <ul><li>Your Combine docker container (installation instructions provided in
@@ -409,6 +409,7 @@ questions:</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="message-circle"></i>
 </div>
+<span class="callout-header">Discussion</span>
 <div id="questions" class="callout-inner">
 <h3 class="callout-title">Questions</h3>
 <div class="callout-content">
@@ -444,6 +445,7 @@ avoid this, let’s rerun by limiting the signal strength to be maximum
 <div class="callout-square">
 <i class="callout-icon" data-feather="message-circle"></i>
 </div>
+<span class="callout-header">Discussion</span>
 <div id="questions-1" class="callout-inner">
 <h3 class="callout-title">Questions</h3>
 <div class="callout-content">
@@ -462,8 +464,10 @@ to the datacard and look at the data, background and signal counts.</li>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="taming-the-observed-dont-try-this-at-home" class="callout-inner">
-<h3 class="callout-title">Taming the observed (DON’T TRY THIS AT HOME!)</h3>
+<h3 class="callout-title">Taming the observed (DON’T TRY THIS AT
+HOME!)</h3>
 <div class="callout-content">
 <p>A hypothetical question: What would bring the observed limit within
 the expected uncertainties? Do the necessary modifications in the
@@ -478,7 +482,7 @@ datacard.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution1" aria-expanded="false" aria-controls="collapseSolution1">
   <h4 class="accordion-header" id="headingSolution1"> Show me the solution </h4>
 </button>
-<div id="collapseSolution1" class="accordion-collapse collapse" data-bs-parent="#accordionSolution1" aria-labelledby="headingSolution1">
+<div id="collapseSolution1" class="accordion-collapse collapse" aria-labelledby="headingSolution1" data-bs-parent="#accordionSolution1">
 <div class="accordion-body">
 <p>Observed limit is below the expected boundaries because we have much
 more MC compared to data. This means there is less room for signal to be
@@ -502,8 +506,10 @@ luminosity measurement:</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="challenge-add-a-lognormal-luminosity-systematic" class="callout-inner">
-<h3 class="callout-title">Challenge: Add a lognormal luminosity systematic</h3>
+<h3 class="callout-title">Challenge: Add a lognormal luminosity
+systematic</h3>
 <div class="callout-content">
 <ul><li>Please add a lognormal systematic uncertainty on luminosity (called
 <code>lumi</code>) that affects all signal and background processes,
@@ -518,7 +524,7 @@ limits.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution2" aria-expanded="false" aria-controls="collapseSolution2">
   <h4 class="accordion-header" id="headingSolution2"> Show me the solution </h4>
 </button>
-<div id="collapseSolution2" class="accordion-collapse collapse" data-bs-parent="#accordionSolution2" aria-labelledby="headingSolution2">
+<div id="collapseSolution2" class="accordion-collapse collapse" aria-labelledby="headingSolution2" data-bs-parent="#accordionSolution2">
 <div class="accordion-body">
 <pre><code>lumi            lnN        1.025          1.025          1.025          1.025          1.025</code></pre>
 </div>
@@ -550,6 +556,7 @@ process.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="challenge-add-a-statistical-uncertainty" class="callout-inner">
 <h3 class="callout-title">Challenge: Add a statistical uncertainty</h3>
 <div class="callout-content">
@@ -568,7 +575,7 @@ processes as well and observe their effect on the limits.</li>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution3" aria-expanded="false" aria-controls="collapseSolution3">
   <h4 class="accordion-header" id="headingSolution3"> Show me the solution </h4>
 </button>
-<div id="collapseSolution3" class="accordion-collapse collapse" data-bs-parent="#accordionSolution3" aria-labelledby="headingSolution3">
+<div id="collapseSolution3" class="accordion-collapse collapse" aria-labelledby="headingSolution3" data-bs-parent="#accordionSolution3">
 <div class="accordion-body">
 <pre><code>stat_signal     gmN 48238  0.0307         -              -              -              -
 stat_tt_semilep gmN 137080 -              0.0383         -              -              -
@@ -586,6 +593,7 @@ stat_wjets	gmN 19     -              -              -              -            
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="improving-the-limit" class="callout-inner">
 <h3 class="callout-title">Improving the limit</h3>
 <div class="callout-content">
@@ -600,7 +608,7 @@ background and signal distributions.</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution4" aria-expanded="false" aria-controls="collapseSolution4">
   <h4 class="accordion-header" id="headingSolution4"> Show me the solution </h4>
 </button>
-<div id="collapseSolution4" class="accordion-collapse collapse" data-bs-parent="#accordionSolution4" aria-labelledby="headingSolution4">
+<div id="collapseSolution4" class="accordion-collapse collapse" aria-labelledby="headingSolution4" data-bs-parent="#accordionSolution4">
 <div class="accordion-body">
 <ul><li>In a count experiment setup, we can consider taking into account a
 part of the <code>mtt</code> distribution where the signal is
@@ -645,6 +653,7 @@ respect to the counts case?</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="zap"></i>
 </div>
+<span class="callout-header">Challenge</span>
 <div id="limits-on-cross-section" class="callout-inner">
 <h3 class="callout-title">Limits on cross section</h3>
 <div class="callout-content">
@@ -660,7 +669,7 @@ model?</p>
 <button class="accordion-button solution-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSolution5" aria-expanded="false" aria-controls="collapseSolution5">
   <h4 class="accordion-header" id="headingSolution5"> Show me the solution </h4>
 </button>
-<div id="collapseSolution5" class="accordion-collapse collapse" data-bs-parent="#accordionSolution5" aria-labelledby="headingSolution5">
+<div id="collapseSolution5" class="accordion-collapse collapse" aria-labelledby="headingSolution5" data-bs-parent="#accordionSolution5">
 <div class="accordion-body">
 <p>We can multiply the signal strength limit with the theoretically
 predicted cross section for the signal process.</p>
@@ -672,8 +681,8 @@ predicted cross section for the signal process.</p>
 <div class="callout-square">
 <i class="callout-icon" data-feather="key"></i>
 </div>
+<span class="callout-header">Key Points</span>
 <div class="callout-inner">
-<h3 class="callout-title">Key Points</h3>
 <div class="callout-content">
 <ul><li>xxx</li>
 <li>yyy</li>
@@ -720,7 +729,7 @@ any links that you are not going to use.
         <p>Materials licensed under <a href="LICENSE.html">CC-BY 4.0</a> by the authors</p>
 
         <p>Template licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="external-link">CC-BY 4.0</a> by <a href="https://carpentries.org/" class="external-link">The Carpentries</a></p>
-        <p>Built with <a href="https://github.com/carpentries/sandpaper/tree/0.16.12" class="external-link">sandpaper (0.16.12)</a>, <a href="https://github.com/carpentries/pegboard/tree/0.7.9" class="external-link">pegboard (0.7.9)</a>, and <a href="https://github.com/carpentries/varnish/tree/1.0.6" class="external-link">varnish (1.0.6)</a></p>
+        <p>Built with <a href="https://github.com/carpentries/sandpaper/tree/0.17.1" class="external-link">sandpaper (0.17.1)</a>, <a href="https://github.com/carpentries/pegboard/tree/0.7.9" class="external-link">pegboard (0.7.9)</a>, and <a href="https://github.com/carpentries/varnish/tree/1.0.7" class="external-link">varnish (1.0.7)</a></p>
 			</div>
 		</footer></div> <!-- / div.container -->
 	<div id="to-top">
@@ -743,7 +752,7 @@ any links that you are not going to use.
   "identifier": "https://katilp.github.io/carpentry-cms-lesson-test/instructor/05-challenge.html",
   "dateCreated": "2025-05-13",
   "dateModified": "2024-07-31",
-  "datePublished": "2025-08-05"
+  "datePublished": "2025-08-12"
 }
 
   </script><script>
